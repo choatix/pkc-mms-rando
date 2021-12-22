@@ -25,6 +25,9 @@ import com.gmeister.temp.pkcmmsrando.map.data.Map;
 import com.gmeister.temp.pkcmmsrando.map.data.Player;
 import com.gmeister.temp.pkcmmsrando.map.data.TileSet;
 import com.gmeister.temp.pkcmmsrando.map.data.Warp;
+import com.gmeister.temp.pkcmmsrando.map.data.WarpFriendlyName;
+import com.gmeister.temp.pkcmmsrando.map.data.WarpLabel;
+import com.gmeister.temp.pkcmmsrando.map.data.WarpResult;
 
 public class Notes
 {
@@ -363,8 +366,191 @@ public class Notes
 			group.add(warp);
 		}
 		
+		if(warpGroups.size() == 787)
+		{
+			return;
+		}
+		
 		rando.shuffleWarpGroups(warpGroups, false, true);
 	}
+	
+	public static ArrayList<WarpLabel> LabelWarps(Disassembly reader, EmpiricalDataReader data) {
+		// Label each warp so a log can be produced
+
+		ArrayList<WarpLabel> warpLabels = new ArrayList<WarpLabel>();
+		try
+		{
+			var friendlyNames = data.readFriendlyWarpNames();
+			var maps = reader.getMaps();
+			for (var map : maps) {
+				var mapName = map.getConstName();
+				var warps = map.getWarps();
+				for (var warp : warps) {
+					if (warp.getDestination() == null) {
+						continue;
+					}
+
+					var destination = warp.getDestination();
+					var destinationName = destination.getMap().getConstName();
+					var warpX = warp.getX();
+					var warpY = warp.getY();
+					var destX = destination.getX();
+					var destY = destination.getY();
+
+					var newLabel = new WarpLabel(mapName, destinationName, warpX, warpY, destX, destY);
+					if (!WarpLabel.IsEquivalentWarp(newLabel, warpLabels)) {
+						SetFriendlyName(newLabel, friendlyNames);
+						warpLabels.add(newLabel);
+					}
+
+				}
+
+			}
+
+			return warpLabels;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		
+		
+	}
+	
+	public static void Group(String group, ArrayList<WarpResult> warps, ArrayList<WarpResult> elements)
+	{
+		var otherGroupMembers = warps.stream().filter(x -> x.StartGroupName != null 
+				&& !x.StartGroupName.equals("X") && !x.StartGroupName.equals("") &&
+				x.StartGroupName.equals(group)).collect(Collectors.toList());
+		
+		for(var member : otherGroupMembers)
+		{
+			if(!elements.contains(member))
+			{
+				elements.add(member);
+				
+				var nextGroupName = member.EndGroupName;
+				Notes.Group(nextGroupName, warps, elements);				
+			}
+			
+		}
+	}
+
+	public static boolean IsBeatable(ArrayList<WarpResult> warps)
+	{
+		HashMap<String, List<String>> groups;
+		
+		var firstWarp = warps.stream().filter(x -> x.StartFriendlyName.equals("CHERRYGROVE_POKECENTER_1F Entrance")).findFirst().get();
+		
+		var startGroup = firstWarp.StartGroupName;
+		var elements = new ArrayList<WarpResult>();
+		
+		Notes.Group(startGroup, warps, elements);
+		
+		System.out.println("Group access count ="+elements.size());
+		
+		var requiredGroups = new String[] {"Victory Road Gate 8 Badges", "Oaks Lab",
+				"Burned Tower 1F", "Burned Tower 1F Down", "Burned Tower Basement", "Dance Theater",
+				"Olivine Cafe", "Dragon Shrine", "Dragons Den Shrine", "Kurts House",
+				"Slowpoke Well Main Entrance", "Ilex South", "Generator Passage", "Rocket Base B2F",
+				"Rocket Hideout Passwords Room", "Rocket Hideout Admin Room", "Generator Passage",
+				"Ice Path Route 44 Side", "Route 36", "Flower Shop", "Violet Gym",
+				"Azalea Gym", "Goldenrod Gym", "Ecruteak Gym", "Cianwood Gym", "Olivine Gym",
+				"Mahogany Gym","Vermilion Gym", "Saffron Gym Sabrina", "Pewter Gym", "Cerulean Gym",
+				"Celadon Gym", "Fuchsia Gym", "Cianwood Pharmacy", "Lighthouse Roof",
+				"Seafoam Gym", "Viridian Gym", "Cinnabar Island"};
+		
+		for(var required : requiredGroups)
+		{
+			var any = elements.stream().filter(x -> x.StartGroupName.equals(required)).count();
+			if(any == 0)
+			{
+				System.err.println("Missing required access to:"+required);
+				
+				/*actuallyExists = warps.stream().filter(x -> x.StartGroupName != null && !x.StartGroupName.equals("") &&
+						!x.StartGroupName.equals("X") && x.StartGroupName.equals(required)).count() == 0;
+				if(actuallyExists)
+				{
+					throw new IllegalArgumentException();
+				}*/
+				
+				
+				return false;
+			}
+		}
+		
+		
+		
+		
+		return true;
+	}
+	
+	public static ArrayList<WarpResult> LogWarps(Disassembly reader, List<WarpLabel> labels) {
+		
+		ArrayList<WarpResult> warpResults = new ArrayList<WarpResult>();
+		
+		var maps = reader.getMaps();
+		for (var map : maps) {
+			var mapName = map.getConstName();
+			var warps = map.getWarps();
+			for (var warp : warps) {
+				if (warp.getDestination() == null) {
+					continue;
+				}
+				
+				var startMap = warp.getMap();
+				var startLabel = new WarpLabel(mapName, null, warp.getX(), warp.getY(), -1, -1);
+
+				var destination = warp.getDestination();
+				var endLabel = new WarpLabel(destination.getMap().getConstName(), null, destination.getX(), destination.getY(), -1, -1);
+				
+				var foundStartWarp = WarpLabel.FindWarp(labels, startLabel);
+				var foundEndWarp = WarpLabel.FindWarp(labels,  endLabel);
+				
+				if(foundStartWarp == null || foundEndWarp == null)
+				{
+					//Currently ignore all these warps, need to handle equivalence!
+					//System.err.println("Unknown warps:" + startLabel + "/" + endLabel);
+				}
+				else
+				{
+					warpResults.add(new WarpResult(foundStartWarp.FriendlyName, foundStartWarp.GroupName,
+							foundEndWarp.FriendlyName, foundEndWarp.GroupName));
+				}
+			}
+
+		}
+		
+		return warpResults;
+	}	
+	
+
+	public static void SetFriendlyName(WarpLabel label, ArrayList<WarpFriendlyName> warpNames)
+	{
+		var count = warpNames.stream().filter(x -> x.MapName.equals(label.MapName) && x.X == label.MapX &&
+				x.Y == label.MapY).count();
+		
+		if(count != 0)
+		{
+			var relevantLabel = warpNames.stream().filter(x -> x.MapName.equals(label.MapName) && x.X == label.MapX &&
+					x.Y == label.MapY).findFirst().get();
+			
+			if(relevantLabel == null)
+			{
+				return;
+			}
+			
+			
+			label.SetFriendlyName(relevantLabel.FriendlyName);
+			label.SetGroupName(relevantLabel.GroupName);
+		}	
+			
+
+	}
+	
+	
+	
 	
 	public static ArrayList<String> randomiseMusicPointers(DisassemblyReader reader, Randomiser rando) throws FileNotFoundException, IOException
 	{
@@ -530,7 +716,30 @@ public class Notes
 		else if (warps)
 		{
 			if (disReader == null) System.out.println("Error: Randomisers require -d");
-			Notes.randomiseWarps(disassembly.getMaps(), rando);
+			
+			boolean beatable = false;
+			
+			ArrayList<WarpResult> warpLog = null;
+			
+			while(!beatable)
+			{		
+				disassembly.setMaps(disReader.readMaps(disassembly.getTileSets()));
+				var labelledWarps = Notes.LabelWarps(disassembly, empReader);	
+				
+				Notes.randomiseWarps(disassembly.getMaps(), rando);
+				warpLog = Notes.LogWarps(disassembly, labelledWarps);		
+				beatable = Notes.IsBeatable(warpLog);
+				
+				
+				
+				/*for(var printWarpLog: warpLog)
+				{
+					System.out.println(printWarpLog);
+				}*/
+			}
+			
+			
+			
 			
 			if (disWriter != null) for (Map map : disassembly.getMaps())
 			{

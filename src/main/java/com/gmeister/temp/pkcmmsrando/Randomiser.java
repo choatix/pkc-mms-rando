@@ -208,6 +208,8 @@ public class Randomiser
 		//Get a Random object
 		Random random = new Random(this.random.nextLong());
 		
+		System.out.println(warpGroups.size());
+		
 		if (warpGroups.size() % 2 != 0 && twoWay && !allowSelfWarps) throw new IllegalArgumentException("Could not avoid self warps as there are an odd number of destinations");
 		
 		//Create a random list of destinations

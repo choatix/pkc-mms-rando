@@ -16,6 +16,7 @@ import com.gmeister.temp.pkcmmsrando.map.data.CollisionPermission;
 import com.gmeister.temp.pkcmmsrando.map.data.Direction;
 import com.gmeister.temp.pkcmmsrando.map.data.Flag;
 import com.gmeister.temp.pkcmmsrando.map.data.PlayerMovementAction;
+import com.gmeister.temp.pkcmmsrando.map.data.WarpFriendlyName;
 
 /**
  * Reads select empirical data from files within this project. <br>
@@ -164,6 +165,35 @@ public class EmpiricalDataReader
 			}
 			for (String line : lines) groups.add(line.split("\t"));
 			return groups;
+		}
+	}
+	
+	public ArrayList<WarpFriendlyName> readFriendlyWarpNames() throws IOException, URISyntaxException
+	{
+		try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream("warp-friendly-names.tsv"))
+		{
+			if (stream == null) throw new FileNotFoundException("Could not find warp-friendly-names.tsv");
+			
+			ArrayList<WarpFriendlyName> names = new ArrayList<>();
+			ArrayList<String> lines = new ArrayList<>();
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8")))
+			{
+				lines = new ArrayList<>(reader.lines().collect(Collectors.toList()));
+			}
+			var skipFirstLine = true;
+			for (String line : lines)
+			{
+				if(skipFirstLine) {
+					skipFirstLine = false; continue;
+				}
+				
+				var split = line.split("\t");
+				names.add(new WarpFriendlyName(split[1], 
+						Integer.parseInt(split[3]), Integer.parseInt(split[4]), split[10], split[11]));
+				
+			}
+			
+			return names;
 		}
 	}
 	
