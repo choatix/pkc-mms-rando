@@ -450,16 +450,57 @@ public class Notes
 		
 		System.out.println("Group access count ="+elements.size());
 		
-		var requiredGroups = new String[] {"Victory Road Gate 8 Badges", "Oaks Lab",
-				"Burned Tower 1F", "Burned Tower 1F Down", "Burned Tower Basement", "Dance Theater",
-				"Olivine Cafe", "Dragon Shrine", "Dragons Den Shrine", "Kurts House",
-				"Slowpoke Well Main Entrance", "Ilex South", "Generator Passage", "Rocket Base B2F",
-				"Rocket Hideout Passwords Room", "Rocket Hideout Admin Room", "Generator Passage",
-				"Ice Path Route 44 Side", "Route 36", "Flower Shop", "Violet Gym",
-				"Azalea Gym", "Goldenrod Gym", "Ecruteak Gym", "Cianwood Gym", "Olivine Gym",
-				"Mahogany Gym","Vermilion Gym", "Saffron Gym Sabrina", "Pewter Gym", "Cerulean Gym",
-				"Celadon Gym", "Fuchsia Gym", "Cianwood Pharmacy", "Lighthouse Roof",
+		//Required for general progression
+		//Victory Road Gate is required on Warps for Elite 4 / Victory Road
+		//Oak's Lab is required to unlock person at Mt. Silver
+		var alwaysRequired = new String[] {"Victory Road Gate 8 Badges", "Oaks Lab"};
+		
+		var requiredForVanillaGymItems = new String[] {"Cianwood Pharmacy"};
+		
+		var requiredForVanillaGyms = new String[] {"Burned Tower 1F", "Burned Tower 1F Down", "Burned Tower Basement",
+				"Dragon Shrine", "Violet Gym","Azalea Gym", "Goldenrod Gym", "Ecruteak Gym", "Cianwood Gym", "Olivine Gym",
+				"Mahogany Gym","Vermilion Gym", "Saffron Gym Sabrina", "Pewter Gym", "Cerulean Gym", "Power Plant",
+				"Cerulean", "Celadon Gym", "Fuchsia Gym", "Lighthouse Roof",
 				"Seafoam Gym", "Viridian Gym", "Cinnabar Island"};
+		
+		//Includes TM08 Rock Smash
+		var requiredForVanillaHMs = new String[] {"Dance Theater",
+				"Olivine Cafe", "Kurts House","Slowpoke Well Main Entrance", "Ilex South",  "Generator Passage", "Rocket Base B2F",
+				"Rocket Hideout Passwords Room", "Rocket Hideout Admin Room", "Generator Passage", "Ice Path Route 44 Side",
+				"Route 36","Flower Shop", "Sprout Tower 3F"};
+		
+		
+		ArrayList<String> requiredGroups = new ArrayList<String>();
+	
+		boolean requireGyms = false;
+		boolean requireHMs = false;
+		
+		for(var required:alwaysRequired)
+		{
+			requiredGroups.add(required);
+		}
+		
+		if(requireGyms)
+		{
+			for(var required: requiredForVanillaGymItems)
+			{
+				requiredGroups.add(required);
+			}
+			
+			for(var required:requiredForVanillaGyms)
+			{
+				requiredGroups.add(required);
+			}
+		}
+		
+		if(requireHMs)
+		{
+			for(var required:requiredForVanillaHMs)
+			{
+				requiredGroups.add(required);
+			}
+		}
+		
 		
 		for(var required : requiredGroups)
 		{
@@ -718,24 +759,29 @@ public class Notes
 			if (disReader == null) System.out.println("Error: Randomisers require -d");
 			
 			boolean beatable = false;
+			boolean waitForBeatable = true;
 			
 			ArrayList<WarpResult> warpLog = null;
 			
 			while(!beatable)
 			{		
-				disassembly.setMaps(disReader.readMaps(disassembly.getTileSets()));
+				//disassembly.setMaps(disReader.readMaps(disassembly.getTileSets()));
 				var labelledWarps = Notes.LabelWarps(disassembly, empReader);	
 				
 				Notes.randomiseWarps(disassembly.getMaps(), rando);
 				warpLog = Notes.LogWarps(disassembly, labelledWarps);		
 				beatable = Notes.IsBeatable(warpLog);
 				
-				
-				
-				/*for(var printWarpLog: warpLog)
+				if(!beatable && !waitForBeatable)
 				{
-					System.out.println(printWarpLog);
-				}*/
+					break;
+				}						
+				
+			}
+			
+			for(var printWarpLog: warpLog)
+			{
+				System.out.println(printWarpLog);
 			}
 			
 			
@@ -750,7 +796,26 @@ public class Notes
 		else if (warpAreas)
 		{
 			if (disReader == null) System.out.println("Error: Randomisers require -d");
+			
+			var labelledWarps = Notes.LabelWarps(disassembly, empReader);	
+			
 			Notes.buildWarpAreas(disassembly.getMaps(), allFlags, empReader, rando);
+			
+			boolean beatable = false;
+			boolean waitForBeatable = true;
+			ArrayList<WarpResult> warpLog = null;
+			
+			while(!beatable)
+			{
+				warpLog = Notes.LogWarps(disassembly, labelledWarps);		
+				beatable = Notes.IsBeatable(warpLog);
+				
+				if(!beatable && !waitForBeatable)
+				{
+					break;
+				}	
+			}			
+						
 			
 			if (disWriter != null) for (Map map : disassembly.getMaps())
 			{

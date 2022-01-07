@@ -17,7 +17,7 @@ public class WarpResult
 	
 	public String toString()
 	{
-		var formattedString = String.format("%s (%s) -> %s (%s)",
+		var formattedString = String.format("%s\t(%s)\t->\t%s\t(%s)",
 				this.StartFriendlyName, this.StartGroupName,
 				this.EndFriendlyName, this.EndGroupName);
 		return formattedString;
