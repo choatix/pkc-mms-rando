@@ -27,369 +27,588 @@ import com.gmeister.temp.pkcmmsrando.map.data.TileSet;
 import com.gmeister.temp.pkcmmsrando.map.data.Warp;
 import com.gmeister.temp.pkcmmsrando.rando.Randomiser;
 import com.gmeister.temp.pkcmmsrando.rando.WarpRandomiser;
+import com.gmeister.temp.pkcmmsrando.map.data.WarpFriendlyName;
+import com.gmeister.temp.pkcmmsrando.map.data.WarpLabel;
+import com.gmeister.temp.pkcmmsrando.map.data.WarpResult;
 
-public class Notes
-{
+public class Notes {
 
-	public static void fillAllRoutesWithGrass() throws IOException
-	{
+	public static void fillAllRoutesWithGrass() throws IOException {
 		Pattern p = Pattern.compile("^\\D+(\\d+).*");
 		File in = Paths.get("D:\\Users\\The_G_Meister\\Documents\\_MY SHIT\\Pokecrystal/Map rando\\Routes\\").toFile();
-		File out = Paths.get(
-				"D:/Users/The_G_Meister/Documents/_MY SHIT/Pokecrystal/Rom patch test/pokecrystal-speedchoice").toFile();
-		
+		File out = Paths
+				.get("D:/Users/The_G_Meister/Documents/_MY SHIT/Pokecrystal/Rom patch test/pokecrystal-speedchoice")
+				.toFile();
+
 		byte[] kantoBlocks = Files.readAllBytes(Paths.get(
 				"D:/Users/The_G_Meister/Documents/_MY SHIT/Pokecrystal/pokecrystal-speedchoice-master/data/tilesets/kanto_metatiles.bin"));
 		byte[][] kantoBlockTiles = new byte[Math.floorDiv(kantoBlocks.length, 16)][];
 		for (int block = 0; block < kantoBlockTiles.length; block++)
 			kantoBlockTiles[block] = Arrays.copyOfRange(kantoBlocks, block * 16, (block + 1) * 16);
-		
-		List<Byte> kantoBuildingTiles = new ArrayList<Byte>(Arrays.asList(new Byte[] {5, 6, 7, 8, 9, 10, 11, 12, 15, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 37, 38, 40, 41, 47, 50, 56, 60, 63, 66, 67, 68, 69, 75, 76, 77, 78, 79, 83, 91, 92, 93, 95}));
+
+		List<Byte> kantoBuildingTiles = new ArrayList<Byte>(
+				Arrays.asList(new Byte[] { 5, 6, 7, 8, 9, 10, 11, 12, 15, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 37,
+						38, 40, 41, 47, 50, 56, 60, 63, 66, 67, 68, 69, 75, 76, 77, 78, 79, 83, 91, 92, 93, 95 }));
 		List<Byte> kantoBuildingBlocks = new ArrayList<>();
 		for (int i = 0; i < kantoBlockTiles.length; i++)
-			for (int j = 0; j < 16; j++) if (kantoBuildingTiles.contains(kantoBlockTiles[i][j]))
-		{
-			kantoBuildingBlocks.add((byte) i);
-			break;
-		}
-		
+			for (int j = 0; j < 16; j++)
+				if (kantoBuildingTiles.contains(kantoBlockTiles[i][j])) {
+					kantoBuildingBlocks.add((byte) i);
+					break;
+				}
+
 		byte[] johtoBlocks = Files.readAllBytes(Paths.get(
 				"D:/Users/The_G_Meister/Documents/_MY SHIT/Pokecrystal/pokecrystal-speedchoice-master/data/tilesets/johto_metatiles.bin"));
 		byte[][] johtoBlockTiles = new byte[Math.floorDiv(johtoBlocks.length, 16)][];
 		for (int block = 0; block < johtoBlockTiles.length; block++)
 			johtoBlockTiles[block] = Arrays.copyOfRange(johtoBlocks, block * 16, (block + 1) * 16);
-		
-		List<Byte> johtoBuildingTiles = Arrays.asList(Byte.valueOf((byte) 1), (byte) 2, (byte) 7, (byte) 8, (byte) 9, (byte) 10, (byte) 11,
-				(byte) 12, (byte) 13, (byte) 14, (byte) 15, (byte) 16, (byte) 17, (byte) 18, (byte) 22, (byte) 24,
-				(byte) 25, (byte) 26, (byte) 27, (byte) 28, (byte) 34, (byte) 35, (byte) 36, (byte) 37, (byte) 38,
-				(byte) 39, (byte) 40, (byte) 41, (byte) 42, (byte) 48, (byte) 49, (byte) 52, (byte) 53, (byte) 55,
-				(byte) 56, (byte) 57, (byte) 58, (byte) 64, (byte) 65, (byte) 68, (byte) 80, (byte) 81, (byte) 82,
-				(byte) 83, (byte) 84, (byte) 85, (byte) 128, (byte) 129, (byte) 130, (byte) 131, (byte) 132, (byte) 133,
-				(byte) 134, (byte) 135, (byte) 136, (byte) 137, (byte) 138, (byte) 139, (byte) 140, (byte) 141,
-				(byte) 142, (byte) 143, (byte) 144, (byte) 145, (byte) 146, (byte) 147, (byte) 148, (byte) 150,
-				(byte) 151, (byte) 152, (byte) 153, (byte) 154, (byte) 155, (byte) 156, (byte) 157, (byte) 160,
-				(byte) 161, (byte) 162, (byte) 163, (byte) 164, (byte) 165, (byte) 166, (byte) 167, (byte) 168,
-				(byte) 169, (byte) 170, (byte) 171, (byte) 172, (byte) 173, (byte) 174, (byte) 175, (byte) 176,
-				(byte) 177, (byte) 178, (byte) 179, (byte) 180, (byte) 181, (byte) 182, (byte) 183, (byte) 184,
-				(byte) 185, (byte) 186, (byte) 187, (byte) 188, (byte) 189, (byte) 190, (byte) 191);
+
+		List<Byte> johtoBuildingTiles = Arrays.asList(Byte.valueOf((byte) 1), (byte) 2, (byte) 7, (byte) 8, (byte) 9,
+				(byte) 10, (byte) 11, (byte) 12, (byte) 13, (byte) 14, (byte) 15, (byte) 16, (byte) 17, (byte) 18,
+				(byte) 22, (byte) 24, (byte) 25, (byte) 26, (byte) 27, (byte) 28, (byte) 34, (byte) 35, (byte) 36,
+				(byte) 37, (byte) 38, (byte) 39, (byte) 40, (byte) 41, (byte) 42, (byte) 48, (byte) 49, (byte) 52,
+				(byte) 53, (byte) 55, (byte) 56, (byte) 57, (byte) 58, (byte) 64, (byte) 65, (byte) 68, (byte) 80,
+				(byte) 81, (byte) 82, (byte) 83, (byte) 84, (byte) 85, (byte) 128, (byte) 129, (byte) 130, (byte) 131,
+				(byte) 132, (byte) 133, (byte) 134, (byte) 135, (byte) 136, (byte) 137, (byte) 138, (byte) 139,
+				(byte) 140, (byte) 141, (byte) 142, (byte) 143, (byte) 144, (byte) 145, (byte) 146, (byte) 147,
+				(byte) 148, (byte) 150, (byte) 151, (byte) 152, (byte) 153, (byte) 154, (byte) 155, (byte) 156,
+				(byte) 157, (byte) 160, (byte) 161, (byte) 162, (byte) 163, (byte) 164, (byte) 165, (byte) 166,
+				(byte) 167, (byte) 168, (byte) 169, (byte) 170, (byte) 171, (byte) 172, (byte) 173, (byte) 174,
+				(byte) 175, (byte) 176, (byte) 177, (byte) 178, (byte) 179, (byte) 180, (byte) 181, (byte) 182,
+				(byte) 183, (byte) 184, (byte) 185, (byte) 186, (byte) 187, (byte) 188, (byte) 189, (byte) 190,
+				(byte) 191);
 		List<Byte> johtoBuildingBlocks = new ArrayList<>();
 		for (int i = 0; i < johtoBlockTiles.length; i++)
-			for (int j = 0; j < 16; j++) if (johtoBuildingTiles.contains(johtoBlockTiles[i][j]))
-		{
-			johtoBuildingBlocks.add((byte) i);
-			break;
-		}
-		
+			for (int j = 0; j < 16; j++)
+				if (johtoBuildingTiles.contains(johtoBlockTiles[i][j])) {
+					johtoBuildingBlocks.add((byte) i);
+					break;
+				}
+
 		List<Integer> waterRouteNums = Arrays.asList(19, 21, 27, 40, 41);
 		List<Integer> vanillaRouteNums = Arrays.asList(20, 23, 26, 28);
 		byte johtoGrass = 3;
 		byte kantoGrass = 11;
 		byte johtoWater = 53;
 		byte kantoWater = 67;
-		
-		for (File f : in.listFiles())
-		{
+
+		for (File f : in.listFiles()) {
 			byte[] b = Files.readAllBytes(f.toPath());
 			Matcher m = p.matcher(f.getName());
 			m.find();
 			int routeNum = Integer.parseInt(m.group(1));
-			
-			if (waterRouteNums.contains(routeNum))
-			{
-				if (routeNum <= 25 || routeNum == 28)
-				{
-					for (int i = 0; i < b.length; i++) if (!kantoBuildingBlocks.contains(b[i])) b[i] = kantoWater;
-				}
-				else for (int i = 0; i < b.length; i++) if (!johtoBuildingBlocks.contains(b[i])) b[i] = johtoWater;
-			}
-			else if (!vanillaRouteNums.contains(routeNum)) if (routeNum <= 25 || routeNum == 28)
-			{
-				for (int i = 0; i < b.length; i++) if (!kantoBuildingBlocks.contains(b[i])) b[i] = kantoGrass;
-			}
-			else for (int i = 0; i < b.length; i++) if (!johtoBuildingBlocks.contains(b[i])) b[i] = johtoGrass;
-			
+
+			if (waterRouteNums.contains(routeNum)) {
+				if (routeNum <= 25 || routeNum == 28) {
+					for (int i = 0; i < b.length; i++)
+						if (!kantoBuildingBlocks.contains(b[i]))
+							b[i] = kantoWater;
+				} else
+					for (int i = 0; i < b.length; i++)
+						if (!johtoBuildingBlocks.contains(b[i]))
+							b[i] = johtoWater;
+			} else if (!vanillaRouteNums.contains(routeNum))
+				if (routeNum <= 25 || routeNum == 28) {
+					for (int i = 0; i < b.length; i++)
+						if (!kantoBuildingBlocks.contains(b[i]))
+							b[i] = kantoGrass;
+				} else
+					for (int i = 0; i < b.length; i++)
+						if (!johtoBuildingBlocks.contains(b[i]))
+							b[i] = johtoGrass;
+
 			File outputFile = out.toPath().resolve("maps/").resolve(f.getName()).toFile();
-			try (FileOutputStream stream = new FileOutputStream(outputFile))
-			{
+			try (FileOutputStream stream = new FileOutputStream(outputFile)) {
 				stream.write(b);
 			}
 		}
 	}
-	
-	public static void randomiseWarpAreas(List<Map> maps, EmpiricalDataReader empReader, WarpRandomiser rando) throws IOException, URISyntaxException
-	{
+
+	public static void randomiseWarpAreas(List<Map> maps, EmpiricalDataReader empReader, WarpRandomiser rando)
+			throws IOException, URISyntaxException {
 		List<List<Warp>> warpGroups = new ArrayList<>();
 		List<List<Map>> mapGroups = new ArrayList<>();
 		List<String[]> mapGroupNamess = empReader.readVanillaMapGroups();
-		for (String[] mapGroupNames : mapGroupNamess) mapGroups.add(Notes.getMapsByNames(maps, mapGroupNames));
-		
+		for (String[] mapGroupNames : mapGroupNamess)
+			mapGroups.add(Notes.getMapsByNames(maps, mapGroupNames));
+
 		for (List<Map> mapGroup : mapGroups)
 			for (Map map : mapGroup)
-				for (Warp warp : map.getWarps()) if (warp.getDestination() != null)
-					for (List<Map> mapGroup2 : mapGroups)
-						if (!mapGroup.equals(mapGroup2) && mapGroup2.contains(warp.getDestination().getMap()))
-		{
-			List<Warp> group = null;
-			
-			groupTesting:
-			for (List<Warp> testGroup : warpGroups) for (Warp testWarp : testGroup) if (warp.isPairedWith(testWarp))
-			{
-				group = testGroup;
-				break groupTesting;
-			}
-			
-			if (group == null)
-			{
-				group = new ArrayList<>();
-				warpGroups.add(group);
-			}
-			
-			group.add(warp);
-		}
-		
+				for (Warp warp : map.getWarps())
+					if (warp.getDestination() != null)
+						for (List<Map> mapGroup2 : mapGroups)
+							if (!mapGroup.equals(mapGroup2) && mapGroup2.contains(warp.getDestination().getMap())) {
+								List<Warp> group = null;
+
+								groupTesting: for (List<Warp> testGroup : warpGroups)
+									for (Warp testWarp : testGroup)
+										if (warp.isPairedWith(testWarp)) {
+											group = testGroup;
+											break groupTesting;
+										}
+
+								if (group == null) {
+									group = new ArrayList<>();
+									warpGroups.add(group);
+								}
+
+								group.add(warp);
+							}
+
 		rando.shuffleWarpGroups(warpGroups, false, true);
 	}
-	
-	public static void buildWarpAreas(List<Map> maps, List<Flag> flags, EmpiricalDataReader empReader, WarpRandomiser rando) throws FileNotFoundException, IOException, URISyntaxException
-	{
+
+	public static void buildWarpAreas(List<Map> maps, List<Flag> flags, EmpiricalDataReader empReader,
+			WarpRandomiser rando) throws FileNotFoundException, IOException, URISyntaxException {
 		List<List<Warp>> warpGroups = new ArrayList<>();
 		List<List<Map>> mapGroups = new ArrayList<>();
 		List<String[]> mapGroupNamess = empReader.readVanillaMapGroups();
-		for (String[] mapGroupNames : mapGroupNamess) mapGroups.add(Notes.getMapsByNames(maps, mapGroupNames));
-		
+		for (String[] mapGroupNames : mapGroupNamess)
+			mapGroups.add(Notes.getMapsByNames(maps, mapGroupNames));
+
 		for (List<Map> mapGroup : mapGroups)
 			for (Map map : mapGroup)
 				for (Warp warp : map.getWarps())
 					for (List<Map> mapGroup2 : mapGroups)
-						if (!mapGroup.equals(mapGroup2) && warp.getDestination() != null &&
-						mapGroup2.contains(warp.getDestination().getMap()))
-		{
-			List<Warp> group = null;
-			
-			groupTesting:
-			for (List<Warp> testGroup : warpGroups) for (Warp testWarp : testGroup) if (warp.isPairedWith(testWarp))
-			{
-				group = testGroup;
-				break groupTesting;
-			}
-			
-			if (group == null)
-			{
-				group = new ArrayList<>();
-				warpGroups.add(group);
-			}
-			
-			group.add(warp);
-		}
-		
+						if (!mapGroup.equals(mapGroup2) && warp.getDestination() != null
+								&& mapGroup2.contains(warp.getDestination().getMap())) {
+							List<Warp> group = null;
+
+							groupTesting: for (List<Warp> testGroup : warpGroups)
+								for (Warp testWarp : testGroup)
+									if (warp.isPairedWith(testWarp)) {
+										group = testGroup;
+										break groupTesting;
+									}
+
+							if (group == null) {
+								group = new ArrayList<>();
+								warpGroups.add(group);
+							}
+
+							group.add(warp);
+						}
+
 		java.util.Map<List<Warp>, List<List<Warp>>> accessibleGroups = new HashMap<>();
-		for (List<Warp> group : warpGroups) accessibleGroups.put(group, new ArrayList<>());
-		
-		for (List<Map> mapGroup : mapGroups)
-		{
+		for (List<Warp> group : warpGroups)
+			accessibleGroups.put(group, new ArrayList<>());
+
+		for (List<Map> mapGroup : mapGroups) {
 			List<List<Warp>> mapGroupWarpGroups = new ArrayList<>();
-			
-			for (List<Warp> warpGroup : warpGroups) if (mapGroup.contains(warpGroup.get(0).getMap())) mapGroupWarpGroups.add(warpGroup);
-			
-			for (List<Warp> warpGroup : mapGroupWarpGroups)
-			{
+
+			for (List<Warp> warpGroup : warpGroups)
+				if (mapGroup.contains(warpGroup.get(0).getMap()))
+					mapGroupWarpGroups.add(warpGroup);
+
+			for (List<Warp> warpGroup : mapGroupWarpGroups) {
 				Warp warp = warpGroup.get(0);
 				java.util.Map<Map, boolean[][]> accessibleCollision = new HashMap<>();
-				boolean[][] startCollision = new boolean[warp.getMap().getBlocks().getCollisionYCapacity()][warp.getMap().getBlocks().getCollisionXCapacity()];
+				boolean[][] startCollision = new boolean[warp.getMap().getBlocks().getCollisionYCapacity()][warp
+						.getMap().getBlocks().getCollisionXCapacity()];
 				startCollision[warp.getY()][warp.getX()] = true;
 				accessibleCollision.put(warp.getMap(), startCollision);
-				
+
 				List<Map> mapsToTest = new ArrayList<>(accessibleCollision.keySet());
-				
-				while (mapsToTest.size() > 0)
-				{
+
+				while (mapsToTest.size() > 0) {
 					Map map = mapsToTest.remove(0);
-					
-					java.util.Map<Map, boolean[][]> accessibleCollisionFromMap = Player.getAccessibleCollision(map, accessibleCollision.get(map), new ArrayList<>());
-					
-					for (Map updatedMap : accessibleCollisionFromMap.keySet())
-					{
-						if (accessibleCollision.containsKey(updatedMap))
-						{
+
+					java.util.Map<Map, boolean[][]> accessibleCollisionFromMap = Player.getAccessibleCollision(map,
+							accessibleCollision.get(map), new ArrayList<>());
+
+					for (Map updatedMap : accessibleCollisionFromMap.keySet()) {
+						if (accessibleCollision.containsKey(updatedMap)) {
 							boolean[][] oldCollision = accessibleCollision.get(updatedMap);
 							boolean[][] newCollision = accessibleCollisionFromMap.get(updatedMap);
 							boolean changed = false;
-							for (int y = 0; y < oldCollision.length; y++) for (int x = 0; x < oldCollision[y].length; x++) if (!oldCollision[y][x] && newCollision[y][x])
-							{
-								changed = true;
-								oldCollision[y][x] = newCollision[y][x];
-							}
+							for (int y = 0; y < oldCollision.length; y++)
+								for (int x = 0; x < oldCollision[y].length; x++)
+									if (!oldCollision[y][x] && newCollision[y][x]) {
+										changed = true;
+										oldCollision[y][x] = newCollision[y][x];
+									}
 							accessibleCollision.put(updatedMap, oldCollision);
-							if (mapGroup.contains(updatedMap) && changed && map != updatedMap && !mapsToTest.contains(updatedMap)) mapsToTest.add(updatedMap);
-						}
-						else
-						{
+							if (mapGroup.contains(updatedMap) && changed && map != updatedMap
+									&& !mapsToTest.contains(updatedMap))
+								mapsToTest.add(updatedMap);
+						} else {
 							accessibleCollision.put(updatedMap, accessibleCollisionFromMap.get(updatedMap));
-							if (mapGroup.contains(updatedMap) && !mapsToTest.contains(updatedMap)) mapsToTest.add(updatedMap);
+							if (mapGroup.contains(updatedMap) && !mapsToTest.contains(updatedMap))
+								mapsToTest.add(updatedMap);
 						}
 					}
 				}
-				
-				for (List<Warp> otherGroup : mapGroupWarpGroups)
-				{
+
+				for (List<Warp> otherGroup : mapGroupWarpGroups) {
 					Warp otherWarp = otherGroup.get(0);
-					if (!warp.equals(otherWarp))
-					{
-						if ((accessibleCollision.keySet().contains(otherWarp.getMap()) &&
-								accessibleCollision.get(otherWarp.getMap())[otherWarp.getY()][otherWarp.getX()])
-								|| (accessibleCollision.keySet().contains(otherWarp.getDestination().getMap()) &&
-										accessibleCollision.get(otherWarp.getDestination().getMap())[otherWarp.getDestination().getY()][otherWarp.getDestination().getX()]))
-						{
+					if (!warp.equals(otherWarp)) {
+						if ((accessibleCollision.keySet().contains(otherWarp.getMap())
+								&& accessibleCollision.get(otherWarp.getMap())[otherWarp.getY()][otherWarp.getX()])
+								|| (accessibleCollision.keySet().contains(otherWarp.getDestination().getMap())
+										&& accessibleCollision.get(otherWarp.getDestination().getMap())[otherWarp
+												.getDestination().getY()][otherWarp.getDestination().getX()])) {
 							accessibleGroups.get(warpGroup).add(otherGroup);
 						}
 					}
 				}
-					
+
 			}
 		}
-		
-		//Manually add warps from and to the north cycling road gatehouse
+
+		// Manually add warps from and to the north cycling road gatehouse
 		Map route16 = maps.stream().filter(m -> m.getConstName().equals("ROUTE_16")).findFirst().orElseThrow();
-		List<Warp> route16ToGate = new ArrayList<>(route16.getWarps().stream()
-				.filter(w -> w.getPosition().getX() == 14 && (w.getPosition().getY() == 6 || w.getPosition().getY() == 7))
+		List<Warp> route16ToGate = new ArrayList<>(route16.getWarps().stream().filter(
+				w -> w.getPosition().getX() == 14 && (w.getPosition().getY() == 6 || w.getPosition().getY() == 7))
 				.collect(Collectors.toList()));
-		List<Warp> route7GateToSaffron = warpGroups.stream().filter(g -> g.stream().anyMatch(w -> w.getMap().getConstName().equals("ROUTE_7_SAFFRON_GATE"))).findFirst().orElseThrow();
-		
+		List<Warp> route7GateToSaffron = warpGroups.stream()
+				.filter(g -> g.stream().anyMatch(w -> w.getMap().getConstName().equals("ROUTE_7_SAFFRON_GATE")))
+				.findFirst().orElseThrow();
+
 		warpGroups.add(route16ToGate);
 		accessibleGroups.get(route7GateToSaffron).add(route16ToGate);
 		accessibleGroups.put(route16ToGate, new ArrayList<>(Arrays.asList(route7GateToSaffron)));
-		
+
 		Map route16Gate = maps.stream().filter(m -> m.getConstName().equals("ROUTE_16_GATE")).findFirst().orElseThrow();
-		List<Warp> route16GateToRoute = new ArrayList<>(route16Gate.getWarps().stream()
-				.filter(w -> w.getPosition().getX() == 9 && (w.getPosition().getY() == 4 || w.getPosition().getY() == 5))
+		List<Warp> route16GateToRoute = new ArrayList<>(route16Gate.getWarps().stream().filter(
+				w -> w.getPosition().getX() == 9 && (w.getPosition().getY() == 4 || w.getPosition().getY() == 5))
 				.collect(Collectors.toList()));
-		List<Warp> route17GateToRoute = warpGroups.stream().filter(g -> g.stream().anyMatch(w -> w.getMap().getConstName().equals("ROUTE_17_ROUTE_18_GATE"))).findFirst().orElseThrow();
-		
+		List<Warp> route17GateToRoute = warpGroups.stream()
+				.filter(g -> g.stream().anyMatch(w -> w.getMap().getConstName().equals("ROUTE_17_ROUTE_18_GATE")))
+				.findFirst().orElseThrow();
+
 		warpGroups.add(route16GateToRoute);
 		accessibleGroups.get(route17GateToRoute).add(route16GateToRoute);
 		accessibleGroups.put(route16GateToRoute, new ArrayList<>(Arrays.asList(route17GateToRoute)));
-		
-		//Find the Route 29 gatehouse as the starting warp
-		List<Warp> startingGroup = warpGroups.stream().filter(g -> g.stream().anyMatch(w -> w.getMap().getConstName().equals("ROUTE_29"))).findFirst().orElseThrow();
-		
+
+		// Find the Route 29 gatehouse as the starting warp
+		List<Warp> startingGroup = warpGroups.stream()
+				.filter(g -> g.stream().anyMatch(w -> w.getMap().getConstName().equals("ROUTE_29"))).findFirst()
+				.orElseThrow();
+
 		rando.buildWarpGroups(warpGroups, accessibleGroups, startingGroup);
 	}
-	
-	public static List<Map> getMapsByNames(List<Map> maps, String... constNames)
-	{
+
+	public static List<Map> getMapsByNames(List<Map> maps, String... constNames) {
 		List<Map> selectedMaps = new ArrayList<>();
 		List<String> constNamesList = new ArrayList<>(Arrays.asList(constNames));
-		for (Map map : maps) if (constNamesList.contains(map.getConstName())) selectedMaps.add(map);
+		for (Map map : maps)
+			if (constNamesList.contains(map.getConstName()))
+				selectedMaps.add(map);
 		return selectedMaps;
 	}
-	
-	public static void randomiseWarps(ArrayList<Map> maps, WarpRandomiser rando) throws IOException
-	{
-		//Collect a bunch of maps to manually edit warps
-		Map victoryRoadGate = maps.stream().filter(m -> m.getConstName().equals("VICTORY_ROAD_GATE")).findFirst().orElseThrow();
+
+	public static void randomiseWarps(ArrayList<Map> maps, WarpRandomiser rando) throws IOException {
+		// Collect a bunch of maps to manually edit warps
+		Map victoryRoadGate = maps.stream().filter(m -> m.getConstName().equals("VICTORY_ROAD_GATE")).findFirst()
+				.orElseThrow();
 		Map victoryRoad = maps.stream().filter(m -> m.getConstName().equals("VICTORY_ROAD")).findFirst().orElseThrow();
 		Map route22 = maps.stream().filter(m -> m.getConstName().equals("ROUTE_22")).findFirst().orElseThrow();
 		Map route23 = maps.stream().filter(m -> m.getConstName().equals("ROUTE_23")).findFirst().orElseThrow();
 		Map route28 = maps.stream().filter(m -> m.getConstName().equals("ROUTE_28")).findFirst().orElseThrow();
-		Map indigoPlateau = maps.stream().filter(m -> m.getConstName().equals("INDIGO_PLATEAU_POKECENTER_1F")).findFirst().orElseThrow();
-		Map silverCaveRoom2 = maps.stream().filter(m -> m.getConstName().equals("SILVER_CAVE_ROOM_2")).findFirst().orElseThrow();
-		Map redsRoom = maps.stream().filter(m -> m.getConstName().equals("SILVER_CAVE_ROOM_3")).findFirst().orElseThrow();
-		
-		//Link all the warps on the right side of victory road gate to themselves
+		Map indigoPlateau = maps.stream().filter(m -> m.getConstName().equals("INDIGO_PLATEAU_POKECENTER_1F"))
+				.findFirst().orElseThrow();
+		Map silverCaveRoom2 = maps.stream().filter(m -> m.getConstName().equals("SILVER_CAVE_ROOM_2")).findFirst()
+				.orElseThrow();
+		Map redsRoom = maps.stream().filter(m -> m.getConstName().equals("SILVER_CAVE_ROOM_3")).findFirst()
+				.orElseThrow();
+
+		// Link all the warps on the right side of victory road gate to themselves
 		victoryRoadGate.getWarps().get(0).setDestination(victoryRoadGate.getWarps().get(0));
 		victoryRoadGate.getWarps().get(1).setDestination(victoryRoadGate.getWarps().get(1));
 		route22.getWarps().get(0).setDestination(route22.getWarps().get(0));
-		
-		//Link victory road and indigo plateau
+
+		// Link victory road and indigo plateau
 		victoryRoadGate.getWarps().get(4).setDestination(indigoPlateau.getWarps().get(0));
 		victoryRoadGate.getWarps().get(5).setDestination(indigoPlateau.getWarps().get(1));
 		indigoPlateau.getWarps().get(0).setDestination(victoryRoadGate.getWarps().get(4));
 		indigoPlateau.getWarps().get(1).setDestination(victoryRoadGate.getWarps().get(5));
-		
-		//Link route 23 and victory road (creates a cycle that should get un-done by the randomiser)
+
+		// Link route 23 and victory road (creates a cycle that should get un-done by
+		// the randomiser)
 		victoryRoad.getWarps().get(0).setDestination(route23.getWarps().get(0));
 		route23.getWarps().get(0).setDestination(victoryRoad.getWarps().get(0));
 		route23.getWarps().get(1).setDestination(victoryRoad.getWarps().get(0));
-		
-		//Link victory road gate and Red's room
+
+		// Link victory road gate and Red's room
 		victoryRoadGate.getWarps().get(6).setDestination(redsRoom.getWarps().get(0));
 		victoryRoadGate.getWarps().get(7).setDestination(redsRoom.getWarps().get(0));
 		redsRoom.getWarps().get(0).setDestination(victoryRoadGate.getWarps().get(6));
-		
-		//Link silver cave room 2 and route 28 (creates a cycle that should get un-done by the randomiser)
+
+		// Link silver cave room 2 and route 28 (creates a cycle that should get un-done
+		// by the randomiser)
 		route28.getWarps().get(1).setDestination(silverCaveRoom2.getWarps().get(1));
 		silverCaveRoom2.getWarps().get(1).setDestination(route28.getWarps().get(1));
-		
-		//Create groups of warps which all lead to the same warp
+
+		// Create groups of warps which all lead to the same warp
 		HashMap<Warp, List<Warp>> warpSourcess = new HashMap<>();
-		for (Map map : maps) for (Warp warp : map.getWarps()) warpSourcess.put(warp, new ArrayList<>());
-		for (Map map : maps) for (Warp warp : map.getWarps()) if (warp.getDestination() != null) warpSourcess.get(warp.getDestination()).add(warp);
-		
-		//Make a list of maps to unrandomise warps within
+		for (Map map : maps)
+			for (Warp warp : map.getWarps())
+				warpSourcess.put(warp, new ArrayList<>());
+		for (Map map : maps)
+			for (Warp warp : map.getWarps())
+				if (warp.getDestination() != null)
+					warpSourcess.get(warp.getDestination()).add(warp);
+
+		// Make a list of maps to unrandomise warps within
 		List<String> unrandomisedMapNames = new ArrayList<>(
 				Arrays.asList("NEW_BARK_TOWN", "ELMS_LAB", "PLAYERS_HOUSE_1F", "PLAYERS_HOUSE_2F",
 						"PLAYERS_NEIGHBORS_HOUSE", "ELMS_HOUSE", "BATTLE_TOWER_BATTLE_ROOM", "BATTLE_TOWER_ELEVATOR",
 						"BATTLE_TOWER_HALLWAY", "INDIGO_PLATEAU_POKECENTER_1F", "WILLS_ROOM", "KOGAS_ROOM",
 						"BRUNOS_ROOM", "KARENS_ROOM", "LANCES_ROOM", "HALL_OF_FAME", "POKECENTER_2F", "TRADE_CENTER",
 						"COLOSSEUM", "TIME_CAPSULE", "MOBILE_TRADE_ROOM", "MOBILE_BATTLE_ROOM", "SILVER_CAVE_ROOM_3"));
-		
+
 		List<List<Warp>> warpGroups = new ArrayList<>();
 		for (Map map : maps)
 			if (!unrandomisedMapNames.contains(map.getConstName()) && !map.getConstName().contains("BETA"))
-				for (Warp warp : map.getWarps())
-		{
-			Warp dest = warp.getDestination();
-			if (dest == null) continue;
-			else if (unrandomisedMapNames.contains(dest.getMap().getConstName())) continue;
-			else if (dest.getMap().getConstName().contains("BETA")) continue;
-			else if (dest.equals(warp)) continue;
-			else if (!warp.hasAccessibleDestination()) continue;
-			else if (dest.getDestination() == null) continue;
-			else if (!dest.hasAccessibleDestination()) continue;
-			
-			List<Warp> group = null;
-			
-			groupTesting:
-			for (List<Warp> testGroup : warpGroups) for (Warp testWarp : testGroup) if (warp.isPairedWith(testWarp))
-			{
-				group = testGroup;
-				break groupTesting;
-			}
-			
-			if (group == null)
-			{
-				group = new ArrayList<>();
-				warpGroups.add(group);
-			}
-			
-			group.add(warp);
+				for (Warp warp : map.getWarps()) {
+					Warp dest = warp.getDestination();
+					if (dest == null)
+						continue;
+					else if (unrandomisedMapNames.contains(dest.getMap().getConstName()))
+						continue;
+					else if (dest.getMap().getConstName().contains("BETA"))
+						continue;
+					else if (dest.equals(warp))
+						continue;
+					else if (!warp.hasAccessibleDestination())
+						continue;
+					else if (dest.getDestination() == null)
+						continue;
+					else if (!dest.hasAccessibleDestination())
+						continue;
+
+					List<Warp> group = null;
+
+					groupTesting: for (List<Warp> testGroup : warpGroups)
+						for (Warp testWarp : testGroup)
+							if (warp.isPairedWith(testWarp)) {
+								group = testGroup;
+								break groupTesting;
+							}
+
+					if (group == null) {
+						group = new ArrayList<>();
+						warpGroups.add(group);
+					}
+
+					group.add(warp);
+				}
+
+		if (warpGroups.size() == 787) {
+			return;
 		}
-		
+
 		rando.shuffleWarpGroups(warpGroups, false, true);
 	}
-	
-	public static ArrayList<String> randomiseMusicPointers(DisassemblyReader reader, Randomiser rando) throws FileNotFoundException, IOException
-	{
+
+	public static ArrayList<WarpLabel> LabelWarps(Disassembly reader, EmpiricalDataReader data) {
+		// Label each warp so a log can be produced
+
+		ArrayList<WarpLabel> warpLabels = new ArrayList<WarpLabel>();
+		try {
+			var friendlyNames = data.readFriendlyWarpNames();
+			var maps = reader.getMaps();
+			for (var map : maps) {
+				var mapName = map.getConstName();
+				var warps = map.getWarps();
+				for (var warp : warps) {
+					if (warp.getDestination() == null) {
+						continue;
+					}
+
+					var destination = warp.getDestination();
+					var destinationName = destination.getMap().getConstName();
+					var warpX = warp.getX();
+					var warpY = warp.getY();
+					var destX = destination.getX();
+					var destY = destination.getY();
+
+					var newLabel = new WarpLabel(mapName, destinationName, warpX, warpY, destX, destY);
+					if (!WarpLabel.IsEquivalentWarp(newLabel, warpLabels)) {
+						SetFriendlyName(newLabel, friendlyNames);
+						warpLabels.add(newLabel);
+					}
+
+				}
+
+			}
+
+			return warpLabels;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+
+	public static void Group(String group, ArrayList<WarpResult> warps, ArrayList<WarpResult> elements) {
+		var otherGroupMembers = warps.stream().filter(x -> x.StartGroupName != null && !x.StartGroupName.equals("X")
+				&& !x.StartGroupName.equals("") && x.StartGroupName.equals(group)).collect(Collectors.toList());
+
+		for (var member : otherGroupMembers) {
+			if (!elements.contains(member)) {
+				elements.add(member);
+
+				var nextGroupName = member.EndGroupName;
+				Notes.Group(nextGroupName, warps, elements);
+			}
+
+		}
+	}
+
+	public static boolean IsBeatable(ArrayList<WarpResult> warps) {
+		HashMap<String, List<String>> groups;
+
+		var firstWarp = warps.stream().filter(x -> x.StartFriendlyName.equals("CHERRYGROVE_POKECENTER_1F Entrance"))
+				.findFirst().get();
+
+		var startGroup = firstWarp.StartGroupName;
+		var elements = new ArrayList<WarpResult>();
+
+		Notes.Group(startGroup, warps, elements);
+
+		System.out.println("Group access count =" + elements.size());
+
+		// Required for general progression
+		// Victory Road Gate is required on Warps for Elite 4 / Victory Road
+		// Oak's Lab is required to unlock person at Mt. Silver
+		var alwaysRequired = new String[] { "Victory Road Gate 8 Badges", "Oaks Lab" };
+
+		var requiredForVanillaGymItems = new String[] { "Cianwood Pharmacy" };
+
+		var requiredForVanillaGyms = new String[] { "Burned Tower 1F", "Burned Tower 1F Down", "Burned Tower Basement",
+				"Dragon Shrine", "Violet Gym", "Azalea Gym", "Goldenrod Gym", "Ecruteak Gym", "Cianwood Gym",
+				"Olivine Gym", "Mahogany Gym", "Vermilion Gym", "Saffron Gym Sabrina", "Pewter Gym", "Cerulean Gym",
+				"Power Plant", "Cerulean", "Celadon Gym", "Fuchsia Gym", "Lighthouse Roof", "Seafoam Gym",
+				"Viridian Gym", "Cinnabar Island" };
+
+		// Includes TM08 Rock Smash
+		var requiredForVanillaHMs = new String[] { "Dance Theater", "Olivine Cafe", "Kurts House",
+				"Slowpoke Well Main Entrance", "Ilex South", "Generator Passage", "Rocket Base B2F",
+				"Rocket Hideout Passwords Room", "Rocket Hideout Admin Room", "Generator Passage",
+				"Ice Path Route 44 Side", "Route 36", "Flower Shop", "Sprout Tower 3F" };
+
+		ArrayList<String> requiredGroups = new ArrayList<String>();
+
+		boolean requireGyms = false;
+		boolean requireHMs = false;
+
+		for (var required : alwaysRequired) {
+			requiredGroups.add(required);
+		}
+
+		if (requireGyms) {
+			for (var required : requiredForVanillaGymItems) {
+				requiredGroups.add(required);
+			}
+
+			for (var required : requiredForVanillaGyms) {
+				requiredGroups.add(required);
+			}
+		}
+
+		if (requireHMs) {
+			for (var required : requiredForVanillaHMs) {
+				requiredGroups.add(required);
+			}
+		}
+
+		for (var required : requiredGroups) {
+			var any = elements.stream().filter(x -> x.StartGroupName.equals(required)).count();
+			if (any == 0) {
+				System.err.println("Missing required access to:" + required);
+
+				/*
+				 * actuallyExists = warps.stream().filter(x -> x.StartGroupName != null &&
+				 * !x.StartGroupName.equals("") && !x.StartGroupName.equals("X") &&
+				 * x.StartGroupName.equals(required)).count() == 0; if(actuallyExists) { throw
+				 * new IllegalArgumentException(); }
+				 */
+
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static ArrayList<WarpResult> LogWarps(Disassembly reader, List<WarpLabel> labels) {
+
+		ArrayList<WarpResult> warpResults = new ArrayList<WarpResult>();
+
+		var maps = reader.getMaps();
+		for (var map : maps) {
+			var mapName = map.getConstName();
+			var warps = map.getWarps();
+			for (var warp : warps) {
+				if (warp.getDestination() == null) {
+					continue;
+				}
+
+				var startMap = warp.getMap();
+				var startLabel = new WarpLabel(mapName, null, warp.getX(), warp.getY(), -1, -1);
+
+				var destination = warp.getDestination();
+				var endLabel = new WarpLabel(destination.getMap().getConstName(), null, destination.getX(),
+						destination.getY(), -1, -1);
+
+				var foundStartWarp = WarpLabel.FindWarp(labels, startLabel);
+				var foundEndWarp = WarpLabel.FindWarp(labels, endLabel);
+
+				if (foundStartWarp == null || foundEndWarp == null) {
+					// Currently ignore all these warps, need to handle equivalence!
+					// System.err.println("Unknown warps:" + startLabel + "/" + endLabel);
+				} else {
+					warpResults.add(new WarpResult(foundStartWarp.FriendlyName, foundStartWarp.GroupName,
+							foundEndWarp.FriendlyName, foundEndWarp.GroupName));
+				}
+			}
+
+		}
+
+		return warpResults;
+	}
+
+	public static void SetFriendlyName(WarpLabel label, ArrayList<WarpFriendlyName> warpNames) {
+		var count = warpNames.stream()
+				.filter(x -> x.MapName.equals(label.MapName) && x.X == label.MapX && x.Y == label.MapY).count();
+
+		if (count != 0) {
+			var relevantLabel = warpNames.stream()
+					.filter(x -> x.MapName.equals(label.MapName) && x.X == label.MapX && x.Y == label.MapY).findFirst()
+					.get();
+
+			if (relevantLabel == null) {
+				return;
+			}
+
+			label.SetFriendlyName(relevantLabel.FriendlyName);
+			label.SetGroupName(relevantLabel.GroupName);
+		}
+
+	}
+
+	public static ArrayList<String> randomiseMusicPointers(DisassemblyReader reader, Randomiser rando)
+			throws FileNotFoundException, IOException {
 		return rando.shuffleMusicPointers(reader.readMusicPointers());
 	}
-	
-	public static ArrayList<String> randomiseSFXPointers(DisassemblyReader reader, Randomiser rando) throws FileNotFoundException, IOException
-	{
+
+	public static ArrayList<String> randomiseSFXPointers(DisassemblyReader reader, Randomiser rando)
+			throws FileNotFoundException, IOException {
 		return rando.shuffleSFXPointers(reader.readSFXPointers());
 	}
-	
-	public static ArrayList<String> randomiseOverworldSpritePointers(DisassemblyReader reader, Randomiser rando) throws FileNotFoundException, IOException
-	{
+
+	public static ArrayList<String> randomiseOverworldSpritePointers(DisassemblyReader reader, Randomiser rando)
+			throws FileNotFoundException, IOException {
 		return rando.shuffleOverworldSpritePointers(reader.readOverworldSpritePointers());
 	}
-	
-	public static void main(String... args) throws IOException, URISyntaxException
-	{
+
+	public static void main(String... args) throws IOException, URISyntaxException {
 		List<String> argsList = new ArrayList<>(Arrays.asList(args));
-		
+
 		boolean help = false;
 		boolean version = false;
-		
+
 		String disIn = null;
 		String disOut = null;
 		boolean warps = false;
@@ -398,198 +617,230 @@ public class Notes
 		boolean musicPointers = false;
 		boolean sfxPointers = false;
 		boolean mapBlocks = false;
-		
-		while (argsList.size() > 0)
-		{
+
+		while (argsList.size() > 0) {
 			String arg = argsList.remove(0);
-			
-			switch (arg)
-			{
-				case "-h":
-				case "--help":
-				{
-					help = true;
-					break;
-				}
-				
-				case "-v":
-				case "--version":
-				{
-					version = true;
-					break;
-				}
-				
-				case "-d":
-				case "--disassembly-in":
-				{
-					if (argsList.isEmpty())
-					{
-						System.err.println(arg + " requires a path argument.");
-						return;
-					}
-					
-					disIn = argsList.remove(0);
-					break;
-				}
-				
-				case "-D":
-				case "--disassembly-out":
-				{
-					if (argsList.isEmpty())
-					{
-						System.err.println(arg + " requires a path argument.");
-						return;
-					}
-					
-					disOut = argsList.remove(0);
-					break;
-				}
-				
-				case "--warps":
-				{
-					warps = true;
-					break;
-				}
-				
-				case "--warp-areas":
-				{
-					warpAreas = true;
-					break;
-				}
-				
-				case "--overworld-sprite-pointers":
-				{
-					overworldSpritePointers = true;
-					break;
-				}
-				
-				case "--music-pointers":
-				{
-					musicPointers = true;
-					break;
-				}
-				
-				case "--sfx-pointers":
-				{
-					sfxPointers = true;
-					break;
-				}
-				
-				case "--map-blocks":
-				{
-					mapBlocks = true;
-					break;
-				}
-				
-				default:
-				{
-					System.err.println(arg + " is an unrecognised argument");
+
+			switch (arg) {
+			case "-h":
+			case "--help": {
+				help = true;
+				break;
+			}
+
+			case "-v":
+			case "--version": {
+				version = true;
+				break;
+			}
+
+			case "-d":
+			case "--disassembly-in": {
+				if (argsList.isEmpty()) {
+					System.err.println(arg + " requires a path argument.");
 					return;
 				}
+
+				disIn = argsList.remove(0);
+				break;
+			}
+
+			case "-D":
+			case "--disassembly-out": {
+				if (argsList.isEmpty()) {
+					System.err.println(arg + " requires a path argument.");
+					return;
+				}
+
+				disOut = argsList.remove(0);
+				break;
+			}
+
+			case "--warps": {
+				warps = true;
+				break;
+			}
+
+			case "--warp-areas": {
+				warpAreas = true;
+				break;
+			}
+
+			case "--overworld-sprite-pointers": {
+				overworldSpritePointers = true;
+				break;
+			}
+
+			case "--music-pointers": {
+				musicPointers = true;
+				break;
+			}
+
+			case "--sfx-pointers": {
+				sfxPointers = true;
+				break;
+			}
+
+			case "--map-blocks": {
+				mapBlocks = true;
+				break;
+			}
+
+			default: {
+				System.err.println(arg + " is an unrecognised argument");
+				return;
+			}
 			}
 		}
-		
-		if (help)
-		{
+
+		if (help) {
 			System.out.println("pkc-mms-rando v0.0.2");
 			System.out.println();
 			System.out.println("requires the following arguments in order:");
-			System.out.println("Path to a pret/pokecrystal style disassembly input folder, eg. \"C:/user/documents/pokecrystal-speedchoice-7.2/\"");
+			System.out.println(
+					"Path to a pret/pokecrystal style disassembly input folder, eg. \"C:/user/documents/pokecrystal-speedchoice-7.2/\"");
 			System.out.println("Path to an output folder, eg. \"C:/user/documents/output/\"");
 			System.out.println("true/false, whether to randomise music pointers (race safe)");
 			System.out.println("true/false, whether to randomise SFX pointers (race safe)");
 			System.out.println("true/false, whether to randomise warps (not race safe)");
-			
+
 			return;
 		}
-		
-		if (version)
-		{
+
+		if (version) {
 			System.out.println("pkc-mms-rando v0.0.2");
 			return;
 		}
-		
+
 		DisassemblyReader disReader = null;
 		DisassemblyWriter disWriter = null;
-		
-		if (disIn != null) disReader = new DisassemblyReader(Paths.get(disIn).normalize().toAbsolutePath().toFile());
-		if (disOut != null) disWriter = new DisassemblyWriter(Paths.get(disOut).normalize().toAbsolutePath().toFile());
-		
+
+		if (disIn != null)
+			disReader = new DisassemblyReader(Paths.get(disIn).normalize().toAbsolutePath().toFile());
+		if (disOut != null)
+			disWriter = new DisassemblyWriter(Paths.get(disOut).normalize().toAbsolutePath().toFile());
+
 		EmpiricalDataReader empReader = new EmpiricalDataReader(null);
 		Randomiser rando = new Randomiser();
 		WarpRandomiser warpRando = new WarpRandomiser();
 		Disassembly disassembly = new Disassembly();
 		ArrayList<Flag> allFlags = new ArrayList<>();
-		
-		if (warps || warpAreas || mapBlocks)
-		{
+
+		if (warps || warpAreas || mapBlocks) {
 			disassembly.setEngineFlags(disReader.readEngineFlags());
 			disassembly.setEventFlags(disReader.readEventFlags());
 			allFlags.addAll(disassembly.getEngineFlags());
 			allFlags.addAll(disassembly.getEventFlags());
-			
+
 			ArrayList<CollisionPermission> perms = empReader.readCollisionPermissions(allFlags);
-			
+
 			disassembly.setCollisionConstants(empReader.readCollisionConstants(perms));
 			disassembly.setTileSets(disReader.readTileSets(disassembly.getCollisionConstants()));
 			disassembly.setMaps(disReader.readMaps(disassembly.getTileSets()));
 		}
-		
-		if (warps && warpAreas) System.err.println("Error: choose one of --warps and --warp-areas");
-		else if (warps)
-		{
-			if (disReader == null) System.out.println("Error: Randomisers require -d");
-			Notes.randomiseWarps(disassembly.getMaps(), warpRando);
-			
-			if (disWriter != null) for (Map map : disassembly.getMaps())
-			{
-				map.writeWarpsToScript();
-				disWriter.writeMapScript(map);
+
+		if (warps && warpAreas)
+			System.err.println("Error: choose one of --warps and --warp-areas");
+		else if (warps) {
+			if (disReader == null)
+				System.out.println("Error: Randomisers require -d");
+			boolean beatable = false;
+			boolean waitForBeatable = true;
+
+			ArrayList<WarpResult> warpLog = null;
+
+			while (!beatable) {
+				// disassembly.setMaps(disReader.readMaps(disassembly.getTileSets()));
+				var labelledWarps = Notes.LabelWarps(disassembly, empReader);
+
+				Notes.randomiseWarps(disassembly.getMaps(), warpRando);
+				warpLog = Notes.LogWarps(disassembly, labelledWarps);
+				beatable = Notes.IsBeatable(warpLog);
+
+				if (!beatable && !waitForBeatable) {
+					break;
+				}
+
 			}
-		}
-		else if (warpAreas)
-		{
-			if (disReader == null) System.out.println("Error: Randomisers require -d");
-			Notes.buildWarpAreas(disassembly.getMaps(), allFlags, empReader, warpRando);
-			
-			if (disWriter != null) for (Map map : disassembly.getMaps())
-			{
-				map.writeWarpsToScript();
-				disWriter.writeMapScript(map);
+
+			for (var printWarpLog : warpLog) {
+				System.out.println(printWarpLog);
 			}
+
+			if (disWriter != null)
+				for (Map map : disassembly.getMaps()) {
+					map.writeWarpsToScript();
+					disWriter.writeMapScript(map);
+				}
+		} else if (warpAreas) {
+			if (disReader == null)
+				System.out.println("Error: Randomisers require -d");
+
+			
+			boolean beatable = false;
+			boolean waitForBeatable = true;
+			ArrayList<WarpResult> warpLog = null;
+
+			while (!beatable) {
+				var labelledWarps = Notes.LabelWarps(disassembly, empReader);
+				Notes.buildWarpAreas(disassembly.getMaps(), allFlags, empReader, warpRando);
+				warpLog = Notes.LogWarps(disassembly, labelledWarps);
+				beatable = Notes.IsBeatable(warpLog);
+
+				if (!beatable && !waitForBeatable) {
+					break;
+				}
+			}
+			
+			for (var printWarpLog : warpLog) {
+				System.out.println(printWarpLog);
+			}
+
+			if (disWriter != null)
+				for (Map map : disassembly.getMaps()) {
+					map.writeWarpsToScript();
+					disWriter.writeMapScript(map);
+				}
 		}
-		
-		if (overworldSpritePointers)
-		{
-			if (disReader == null) System.out.println("Error: Randomisers require -d");
+
+		if (overworldSpritePointers) {
+			if (disReader == null)
+				System.out.println("Error: Randomisers require -d");
 			ArrayList<String> pointers = Notes.randomiseOverworldSpritePointers(disReader, rando);
-			if (disWriter != null) disWriter.writeOverworldSpritePointers(pointers);
+			if (disWriter != null)
+				disWriter.writeOverworldSpritePointers(pointers);
 		}
-		
-		if (musicPointers)
-		{
-			if (disReader == null) System.out.println("Error: Randomisers require -d");
+
+		if (musicPointers) {
+			if (disReader == null)
+				System.out.println("Error: Randomisers require -d");
 			ArrayList<String> pointers = Notes.randomiseMusicPointers(disReader, rando);
-			if (disWriter != null) disWriter.writeMusicPointers(pointers);
+			if (disWriter != null)
+				disWriter.writeMusicPointers(pointers);
 		}
-		
-		if (sfxPointers)
-		{
-			if (disReader == null) System.out.println("Error: Randomisers require -d");
+
+		if (sfxPointers) {
+			if (disReader == null)
+				System.out.println("Error: Randomisers require -d");
 			ArrayList<String> pointers = Notes.randomiseSFXPointers(disReader, rando);
-			if (disWriter != null) disWriter.writeSFXPointers(pointers);
+			if (disWriter != null)
+				disWriter.writeSFXPointers(pointers);
 		}
-		
-		if (mapBlocks)
-		{
-			if (disReader == null) System.out.println("Error: Randomisers require -d");
-			
-			for (TileSet tileSet : disassembly.getTileSets()) tileSet.getBlockSet().updateCollGroups();
-			
-			for (Map map : disassembly.getMaps()) map.getBlocks().setBlocks(rando.randomiseBlocksByCollision(map.getTileSet().getBlockSet(), map.getBlocks().getBlocks()));
-			
-			if (disWriter != null) disWriter.writeAllMapBlocks(disassembly.getMaps());
+
+		if (mapBlocks) {
+			if (disReader == null)
+				System.out.println("Error: Randomisers require -d");
+
+			for (TileSet tileSet : disassembly.getTileSets())
+				tileSet.getBlockSet().updateCollGroups();
+
+			for (Map map : disassembly.getMaps())
+				map.getBlocks().setBlocks(
+						rando.randomiseBlocksByCollision(map.getTileSet().getBlockSet(), map.getBlocks().getBlocks()));
+
+			if (disWriter != null)
+				disWriter.writeAllMapBlocks(disassembly.getMaps());
 		}
 	}
-	
+
 }
